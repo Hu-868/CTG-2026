@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026高考倒计时</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4F46E5',
+            secondary: '#8B5CF6',
+            accent: '#EC4899',
+            dark: '#0F172A',
+            light: '#F8FAFC',
+            neon: '#39FF14',
+          },
+          fontFamily: {
+            digital: ['Digital-7', 'monospace'],
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .text-shadow {
+        text-shadow: 0 0 10px rgba(79, 70, 229, 0.8);
+      }
+      .text-shadow-neon {
+        text-shadow: 0 0 5px rgba(57, 255, 20, 0.5), 0 0 10px rgba(57, 255, 20, 0.5), 0 0 15px rgba(57, 255, 20, 0.5);
+      }
+      .bg-gradient-tech {
+        background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+      }
+      .glass-effect {
+        background: rgba(30, 41, 59, 0.3);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(79, 70, 229, 0.2);
+      }
+      .animate-pulse-slow {
+        animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .animate-float {
+        animation: float 6s ease-in-out infinite;
+      }
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      .card-hover:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      }
+      .digit-transition {
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .glow-border {
+        box-shadow: 0 0 10px rgba(79, 70, 229, 0.5), 0 0 20px rgba(139, 92, 246, 0.3);
+      }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    @keyframes pulse-number {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes gradient-flow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
+  <!-- 数字字体 -->
+  <style>
+    @font-face {
+      font-family: 'Digital-7';
+      src: url('https://fonts.cdnfonts.com/css/digital-7-mono');
+      font-display: swap;
+    }
+  </style>
+</head>
+<body class="font-inter bg-gradient-tech min-h-screen text-light overflow-x-hidden flex items-center justify-center p-4">
+  <!-- 粒子背景容器 -->
+  <div id="particles-js" class="fixed inset-0 z-0"></div>
+
+  <div class="relative z-10 w-full max-w-4xl">
+    <!-- 倒计时主容器 -->
+    <div class="glass-effect rounded-3xl p-6 md:p-12 card-hover glow-border animate-float">
+      <header class="text-center mb-10">
+        <h1 class="text-[clamp(1.8rem,4vw,2.8rem)] font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary text-shadow-lg mb-3">
+          2026高考倒计时
+        </h1>
+        <p class="text-lg md:text-xl text-gray-300">
+          距离2026年高考还有
+        </p>
+      </header>
+
+      <!-- 倒计时卡片 -->
+      <div id="countdown" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+        <!-- 天数 -->
+        <div class="text-center">
+          <div class="relative">
+            <div class="bg-dark/60 rounded-xl p-4 md:p-6 border border-primary/30">
+              <div id="days" class="text-[clamp(2.5rem,8vw,5rem)] font-bold font-digital text-neon text-shadow-neon digit-transition">00</div>
+            </div>
+            <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-primary/80 text-xs md:text-sm px-3 py-1 rounded-full">
+              天
+            </div>
+          </div>
+        </div>
+        
+        <!-- 小时 -->
+        <div class="text-center">
+          <div class="relative">
+            <div class="bg-dark/60 rounded-xl p-4 md:p-6 border border-primary/30">
+              <div id="hours" class="text-[clamp(2.5rem,8vw,5rem)] font-bold font-digital text-neon text-shadow-neon digit-transition">00</div>
+            </div>
+            <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-primary/80 text-xs md:text-sm px-3 py-1 rounded-full">
+              时
+            </div>
+          </div>
+        </div>
+        
+        <!-- 分钟 -->
+        <div class="text-center">
+          <div class="relative">
+            <div class="bg-dark/60 rounded-xl p-4 md:p-6 border border-primary/30">
+              <div id="minutes" class="text-[clamp(2.5rem,8vw,5rem)] font-bold font-digital text-neon text-shadow-neon digit-transition">00</div>
+            </div>
+            <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-primary/80 text-xs md:text-sm px-3 py-1 rounded-full">
+              分
+            </div>
+          </div>
+        </div>
+        
+        <!-- 秒 -->
+        <div class="text-center">
+          <div class="relative">
+            <div class="bg-dark/60 rounded-xl p-4 md:p-6 border border-primary/30">
+              <div id="seconds" class="text-[clamp(2.5rem,8vw,5rem)] font-bold font-digital text-neon text-shadow-neon digit-transition">00</div>
+            </div>
+            <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-primary/80 text-xs md:text-sm px-3 py-1 rounded-full">
+              秒
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 毫秒 -->
+      <div id="milliseconds" class="text-center text-[clamp(1.2rem,3vw,1.8rem)] font-digital text-gray-300 mt-8 md:mt-10">
+        <span class="px-2 py-1 bg-dark/40 rounded">000</span>
+      </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer class="text-center mt-12 text-gray-500 text-sm">
+      <p>高考加油！！！ | 高考倒计时 |  © 2605 胡胜杰</p>
+    </footer>
+  </div>
+
+  <!-- 粒子效果库 -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  
+  <!-- 主脚本 -->
+  <script>
+    // 粒子背景配置
+    document.addEventListener('DOMContentLoaded', function() {
+      particlesJS('particles-js', {
+        "particles": {
+          "number": {
+            "value": 100,
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": "#4F46E5"
+          },
+          "shape": {
+            "type": "circle",
+          },
+          "opacity": {
+            "value": 0.6,
+            "random": true
+          },
+          "size": {
+            "value": 3,
+            "random": true
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#4F46E5",
+            "opacity": 0.2,
+            "width": 1
+          },
+          "move": {
+            "enable": true,
+            "speed": 1,
+            "direction": "none",
+            "random": true,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": true,
+              "mode": "grab"
+            },
+            "onclick": {
+              "enable": true,
+              "mode": "push"
+            },
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 140,
+              "line_linked": {
+                "opacity": 0.5
+              }
+            },
+            "push": {
+              "particles_nb": 4
+            }
+          }
+        },
+        "retina_detect": true
+      });
+
+      // 高考日期设置（2026年6月7日 09:00:00）
+      const targetDate = new Date('2026-06-07T09:00:00').getTime();
+      
+      // 上一次的值，用于检测变化并添加动画
+      let lastValues = {
+        days: '',
+        hours: '',
+        minutes: '',
+        seconds: '',
+        milliseconds: ''
+      };
+      
+      // 倒计时函数
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+        
+        // 如果日期已过
+        if (distance < 0) {
+          document.getElementById('days').innerText = '00';
+          document.getElementById('hours').innerText = '00';
+          document.getElementById('minutes').innerText = '00';
+          document.getElementById('seconds').innerText = '00';
+          document.getElementById('milliseconds').innerText = '000';
+          return;
+        }
+        
+        // 计算剩余时间
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        const milliseconds = Math.floor((distance % 1000) / 1);
+        
+        // 格式化数字
+        const formattedDays = days.toString().padStart(2, '0');
+        const formattedHours = hours.toString().padStart(2, '0');
+        const formattedMinutes = minutes.toString().padStart(2, '0');
+        const formattedSeconds = seconds.toString().padStart(2, '0');
+        const formattedMilliseconds = milliseconds.toString().padStart(3, '0');
+        
+        // 更新DOM并添加变化动画
+        updateDigit('days', formattedDays);
+        updateDigit('hours', formattedHours);
+        updateDigit('minutes', formattedMinutes);
+        updateDigit('seconds', formattedSeconds);
+        document.getElementById('milliseconds').querySelector('span').innerText = formattedMilliseconds;
+        
+        // 保存当前值
+        lastValues = {
+          days: formattedDays,
+          hours: formattedHours,
+          minutes: formattedMinutes,
+          seconds: formattedSeconds,
+          milliseconds: formattedMilliseconds
+        };
+      }
+      
+      // 更新数字并添加动画
+      function updateDigit(id, value) {
+        const element = document.getElementById(id);
+        if (element.innerText !== value) {
+          element.classList.add('scale-110', 'text-white');
+          element.innerText = value;
+          setTimeout(() => {
+            element.classList.remove('scale-110', 'text-white');
+          }, 300);
+        }
+      }
+      
+      // 初始更新
+      updateCountdown();
+      
+      // 每毫秒更新一次以确保毫秒精度
+      setInterval(updateCountdown, 1);
+    });
+  </script>
+</body>
+</html>
+    
